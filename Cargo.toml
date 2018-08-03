@@ -1,0 +1,12 @@
+[package]
+name = "seed_management"
+version = "0.1.0"
+authors = ["ljiee <liangjie.mailbox@qq.com>"]
+
+[dependencies]
+
+rand = "0.3.14"
+msg-transmitter = "0.1"
+serde = "1.0"
+serde_derive = "1.0"
+bincode = "1.0"
