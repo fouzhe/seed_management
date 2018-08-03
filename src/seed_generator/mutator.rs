@@ -153,6 +153,99 @@ fn could_be_bitflip(xor_val_orign: u32) -> bool {
     false
 }
 
+fn SWAP16(_x:u16) -> u16{
+  let  _ret:u16 = _x;
+  let ans:u16 = ((_ret << 8) | (_ret >> 8)) as u16;
+  return ans;
+}
+
+fn SWAP32(_x:u32) -> u32{
+  let  _ret:u32 = _x;
+  let ans:u32 = ((_ret << 24) | (_ret >> 24) |
+          ((_ret << 8) & 0x00FF0000) |
+          ((_ret >> 8) & 0x0000FF00)) as u32;
+  return ans;
+}
+
+fn could_be_arith(old_val_orign:u32 , new_val_orign:u32, blen:u8) -> bool {
+  let mut old_val=old_val_orign;
+  let mut new_val=new_val_orign;
+  let mut i:u32;
+  let mut ov:u32 = 0;
+  let mut nv:u32 = 0;
+  let mut diffs:u32 = 0;
+
+  if old_val == new_val {return true;}
+
+  /* See if one-byte adjustments to any byte could produce this result. */
+
+  for i in 0..blen {
+
+    let a:u8 = (old_val >> (8 * i)) as u8;
+    let b:u8 = (new_val >> (8 * i)) as u8;
+
+    if a != b { diffs+=1; ov = a as u32;nv = b as u32; }
+
+  }
+
+  /* If only one byte differs and the values are within range, return 1. */
+
+  if diffs == 1 {
+
+    if (ov - nv) as u8 <= config::ARITH_MAX ||
+        (nv - ov) as u8 <= config::ARITH_MAX {return true;}
+
+  }
+
+  if blen == 1 {return false;}
+
+  /* See if two-byte adjustments to any byte would produce this result. */
+
+  diffs = 0;
+
+  for i in 0..blen/2 {
+
+    let a:u16 = (old_val >> (16 * i)) as u16;
+    let b:u16 = (new_val >> (16 * i)) as u16;
+
+    if a != b { diffs+=1; ov = a as u32; nv = b as u32; }
+
+  }
+
+  /* If only one word differs and the values are within range, return 1. */
+
+  if diffs == 1 {
+
+    if (ov - nv) as u16 <= config::ARITH_MAX as u16 ||
+        (nv - ov) as u16 <= config::ARITH_MAX as u16 {return true;}
+
+    ov = SWAP16(ov as u16) as u32; nv = SWAP16(nv as u16) as u32;
+
+    if (ov - nv) as u16 <= config::ARITH_MAX as u16 ||
+        (nv - ov) as u16 <= config::ARITH_MAX as u16 {return true;}
+
+  }
+
+  /* Finally, let's do the same thing for dwords. */
+
+  if blen == 4 {
+
+    if (old_val - new_val) as u32 <= config::ARITH_MAX as u32 ||
+        (new_val - old_val) as u32 <= config::ARITH_MAX as u32 {return true;}
+
+    new_val = SWAP32(new_val);
+    old_val = SWAP32(old_val);
+
+    if (old_val - new_val) as u32 <= config::ARITH_MAX as u32 ||
+        (new_val - old_val) as u32 <= config::ARITH_MAX as u32 {return true;}
+
+  }
+
+  false
+
+}
+
+
 // pub fn add_one_byte_could_be_bitflip(input_seed: &Vec<u8>, byte_pos:u64, arith_number:u8)-> bool {
 //     let orig = input_seed[byte_pos as usize];
 //     let xor_val = orig ^ (orig+arith_number);
