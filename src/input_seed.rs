@@ -6,13 +6,13 @@ pub struct InputSeed {
 }
 
 impl InputSeed {
-    pub fn emptyNew()-> InputSeed {
-        InputSeed {
-            is_favored:true,
-            was_fuzzed:false,
-            seed_vec:Vec::new(),
-        }
-    }
+    // pub fn emptyNew()-> InputSeed {
+    //     InputSeed {
+    //         is_favored:true,
+    //         was_fuzzed:false,
+    //         seed_vec:Vec::new(),
+    //     }
+    // }
     // pub fn new(is_favored:bool, was_fuzzed:bool, seed_vec:Vec<u8>)-> InputSeed {
     //     InputSeed {
     //         is_favored:is_favored,

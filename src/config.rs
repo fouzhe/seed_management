@@ -98,3 +98,4 @@ pub const HAVOC_BLK_LARGE: u64 = 1500;
 pub const HAVOC_BLK_XL:u64 = 32768; // Extra-large blocks, selected very rarely (<5% of the time)
 
 pub const MAX_FILE:u64 = 1*1024*1024; //Maximum size of input file, in bytes (keep under 100MB)
+pub const MAP_SIZE:usize = 1 << 16;

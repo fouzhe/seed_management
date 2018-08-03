@@ -27,7 +27,7 @@ impl SeedPool {
 
     pub fn seed_index_move(&mut self) {
         if self.seed_index + 1 == self.seed_pool.len() {
-            self.seed_index = 0; 
+            self.seed_index = 0;
         }
         else {
            self.seed_index += 1;
@@ -36,5 +36,10 @@ impl SeedPool {
 
     pub fn get_a_seed_to_mutate(&mut self)->InputSeed {
         self.seed_pool[self.seed_index].clone()
+    }
+
+    pub fn push_a_seed(&mut self, seed_vec: Vec<u8>) {
+        let seed_to_push = InputSeed::new(seed_vec);
+        self.seed_pool.push(seed_to_push);
     }
 }
